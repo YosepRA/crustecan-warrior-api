@@ -1,0 +1,32 @@
+{
+  "name": "crustecan-warrior-api",
+  "version": "1.0.0",
+  "description": "Crustecan Warrior API for fixtures list and ticketing system.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon -w . -w .env app.js",
+    "dev": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YosepRA/crustecan-warrior-api.git"
+  },
+  "author": "Yosep Ryan Agusta <Yosep Ryan Agusta> (https://yosepra.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YosepRA/crustecan-warrior-api/issues"
+  },
+  "homepage": "https://github.com/YosepRA/crustecan-warrior-api#readme",
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.2"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "faker": "^5.5.3",
+    "mongoose": "^5.13.13"
+  }
+}
