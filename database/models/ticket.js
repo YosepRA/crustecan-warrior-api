@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
-const ticketSchema = new mongoose.Schema({
-  fixture: { type: mongoose.Types.ObjectId, ref: 'Fixture' },
+const { Schema, model } = mongoose;
+
+const ticketSchema = new Schema({
+  fixture: { type: Schema.Types.ObjectId, ref: 'Fixture' },
   seat: {
-    section: 'A',
-    seatNumber: '001-0100',
+    section: String,
+    seatNumber: String,
   },
 });
 
-const Ticket = mongoose.model('Ticket', ticketSchema);
+const Ticket = model('Ticket', ticketSchema);
 
 module.exports = Ticket;

@@ -4,7 +4,7 @@ Fixture list and user based ticketing system for football club Crustecan Warrior
 
 ### Specification: REST
 
-_Note: This documentation will be updated over time._
+_Note: This documentation may not be accurate and will be updated over time._
 
 ## Fixtures
 
@@ -22,8 +22,7 @@ _Note: This documentation will be updated over time._
     {
       section: String,
       seatNumber: String,
-      isBooked: Boolean,
-      ticket: Object, // Reference to Ticket instance.
+      isAvailable: Boolean,
     }
   ],
   isTicketAvailable: Boolean, // State changes occur on each successful checkout in order to avoid seats array checking on each query.
@@ -44,14 +43,12 @@ _Note: This documentation will be updated over time._
     {
       section: 'A',
       seatNumber: '001-0100',
-      isBooked: true,
-      ticket: 'abcdefghjijkl', // Ticket ID.
+      isAvailable: true
     },
     {
       section: 'A',
       seatNumber: '001-0101',
-      isBooked: false,
-      ticket: null,
+      isAvailable: false,
     }
   ],
   isTicketAvailable: true,
@@ -70,10 +67,10 @@ GET /api/fixture
 
 ### Parameters
 
-- `page` **Required**  
+- `increment` **Required**  
   Type: `Number`  
   Default: 1  
-  Current page iteration.
+  Current data incrementation. Each call will return 3 fixtures by default and will increment based on that limits.
 - `includeSeat` _Optional_  
   Type: `Boolean`  
   Default: false  
@@ -81,7 +78,7 @@ GET /api/fixture
 
 ### Returns
 
-An array of fixtures starting from the next unplayed fixture until the next three months schedule.
+An array of fixtures starting from the next unplayed fixture until the next three matches.
 
 It will use a "Load More" function rather than the usual pagination. Therefore, it will result in a continuous and chunked response data instead of a full fixture list on each request.
 
@@ -89,7 +86,8 @@ It will use a "Load More" function rather than the usual pagination. Therefore, 
 
 ```js
 {
-  page: 1,
+  increment: 1,
+  length: 3,
   fixtures: [
     {
       _id: 'abcdefghjijkl',
@@ -98,20 +96,18 @@ It will use a "Load More" function rather than the usual pagination. Therefore, 
       event: 'Premier League',
       date: '2021-11-19T09:59:53.470Z', // Date string.
       isHome: true,
-      seats: {
-        'A': [
-          {
-            seatNumber: '001-0100',
-            isBooked: true,
-            ticket: 'abcdefghjijkl', // Ticket ID.
-          },
-          {
-            seatNumber: '001-0101',
-            isBooked: false,
-            ticket: null,
-          }
-        ]
-      },
+      seats: [
+        {
+          section: 'A',
+          seatNumber: '001-0100',
+          isBooked: true
+        },
+        {
+          section: 'A',
+          seatNumber: '001-0101',
+          isBooked: false,
+        }
+      ],
       isTicketAvailable: true,
     },
     // other fixtures...
@@ -156,32 +152,6 @@ A fixture's detailed information.
 },
 ```
 
-<!-- ---
-
-## Seat
-
-### Data Structure
-
-```js
-{
-  _id: String,
-  section: String,
-  seatNumber: String,
-  bookingStatus: Boolean,
-}
-```
-
-#### Example:
-
-```js
-{
-  _id: 'abcdefghijkl',
-  section: 'A',
-  seatNumber: '001-0100',
-  bookingStatus: true,
-}
-``` -->
-
 ---
 
 ## Ticket
@@ -193,8 +163,8 @@ A fixture's detailed information.
   _id: String, // MongoDB ObjectId.
   fixture: Object, // Reference to fixtur data.
   seat: {
-    section: 'A',
-    seatNumber: '001-0100',
+    section: String,
+    seatNumber: String,
   },
 }
 ```
@@ -212,14 +182,14 @@ A fixture's detailed information.
 }
 ```
 
-### **Create Payment Intent**
+### **Create Checkout Session**
 
-Create payment intent powered by Stripe to get URL to payment page. While the payment session is still active (it's neither succeed or failed), the ordered seat status will not be available for other session. User will be given 15 minutes to complete the order, else it will be canceled automatically.
+Create checkout session powered by Stripe to get URL to payment page. While the payment session is still active (it's neither succeed or failed), the ordered seat status will not be available for other session. User will be given 15 minutes to complete the order, else it will be canceled automatically.
 
 ### Endpoint
 
 ```
-POST /api/ticket/create-payment-intent
+POST /api/ticket/create-checkout-session
 ```
 
 ### Parameters
@@ -230,19 +200,19 @@ _No parameters._
 
 Type: JSON
 
-- `total` **Required**  
-  Type: `Number`  
-  Default: 0  
-  Ticket checkout total price.
-- `seat` **Required**  
+- `fixtureId` **Required**  
+  Type: `String`  
+  Default: ''  
+  Fixture's ID.
+- `orders` **Required**  
   Type: `Object`  
-  Default: 0  
-  Seat information.
+  Default: null  
+  An array of seat orders object.
   - `section` **Required**  
     Type: String  
     Default: ''  
     Seat section.
-  - `number` **Required**  
+  - `seatNumber` **Required**  
     Type: String  
     Default: ''  
     Seat number.
@@ -303,7 +273,7 @@ User accounts management using Passport local strategy (username and password) a
 
 ### **Register**
 
-Register new user.
+Register a new user.
 
 ### Endpoint
 
@@ -331,7 +301,86 @@ Type: JSON
   Type: String  
   Default: ''  
   User's email.
+- `name` **Required**  
+  Type: String  
+  Default: ''  
+  User's full name.
+
+### Returns
+
+User's username.
+
+```js
+{
+  success: true,
+  user: {
+    username: 'bigjoe'
+  }
+},
+```
+
+### **Login**
+
+User login.
+
+### Endpoint
+
+```
+POST /api/user/login
+```
+
+### Parameters
+
+No parameters.
+
+### Body Data
+
+Type: JSON
+
+- `username` **Required**  
+  Type: `String`  
+  Default: ''  
+  User's username. Used as one of the login credentials.
+- `password` **Required**  
+  Type: `String`  
+  Default: ''  
+  User's password.
+
+### Returns
+
+User's username.
+
+```js
+{
+  success: true,
+  user: {
+    username: 'bigjoe'
+  }
+},
+```
+
+### **Logout**
+
+User logout.
+
+### Endpoint
+
+```
+GET /api/user/logout
+```
+
+### Parameters
+
+No parameters.
+
+### Body Data
+
+No body data.
 
 ### Returns
 
 None.
+
+```js
+{ success: true },
+```

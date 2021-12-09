@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const fixtureSchema = new mongoose.Schema({
+const { Schema, model } = mongoose;
+
+const fixtureSchema = new Schema({
   homeTeam: String,
   awayTeam: String,
   event: String,
@@ -16,6 +18,6 @@ const fixtureSchema = new mongoose.Schema({
   isTicketAvailable: Boolean,
 });
 
-const Fixture = mongoose.model('Fixture', fixtureSchema);
+const Fixture = model('Fixture', fixtureSchema);
 
 module.exports = Fixture;

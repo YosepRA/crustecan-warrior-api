@@ -43,4 +43,13 @@ function generateSeats() {
   return seats;
 }
 
-module.exports = { generateSeats };
+async function promiseResolver(promise) {
+  try {
+    const data = await promise;
+    return [data, null];
+  } catch (err) {
+    return [null, err];
+  }
+}
+
+module.exports = { generateSeats, promiseResolver };
