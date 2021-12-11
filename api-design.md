@@ -111,7 +111,7 @@ It will use a "Load More" function rather than the usual pagination. Therefore, 
       ],
       isTicketAvailable: true,
     },
-    // other fixtures...
+    // other fixtures data ...
   ]
 }
 ```
@@ -234,17 +234,23 @@ Redirect URL to Stripe checkout page.
 
 ## Transaction
 
-Transaction data to monitor all initiated checkouts, its status, and act as a general log book.
+Transaction data to monitor all initiated checkouts, its status, and act as a reference point for checkout related routes.
 
 ### Data Structure
 
 ```js
 {
-  _id: String,
-  transactionId: String, // Stripe payment session ID.
-  fixture: Object,
-  seat: Object,
-  status: Array, // An array of statuses. The last entry will be the latest update.
+  fixture: String, // Fixture ID.
+  orders: [
+    {
+      section: String,
+      seatNumber: String,
+    },
+  ],
+  user: String, // User ID.
+  stripeSessionId: String,
+  status: String,
+  created: Date,
 }
 ```
 
@@ -252,18 +258,19 @@ Transaction data to monitor all initiated checkouts, its status, and act as a ge
 
 ```js
 {
-  _id: 'abcdefghijkl',
-  fixture: 'mnopqrstuvwxyz',
-  seat: {
-    section: 'A',
-    seatNumber: '001-0100',
-  },
-  status: [
-    'Payment intent created.',
-    'Payment is pending.',
-    'Payment has completed.',
+  status: "open",
+  _id: "abcdefghijkl",
+  fixture: "abcdefghijkl",
+  orders: [
+    {
+      section: "A",
+      seatNumber: "001-0007"
+    }
   ],
-}
+  stripeSessionId: "cs_test_a1jzmIIXJtQ6SAfu0C5P5WYyDKajQxuyxtTljcxayCzqAt4tQjjRhHfHoK",
+  user: "abcdefghijkl",
+  created: "2021-12-11T09:22:24.561Z",
+},
 ```
 
 ### **Get Transactions List**
@@ -289,15 +296,63 @@ No body data.
 
 ### Returns
 
-User's username.
+User's transactions list. Sorted by the latest entries.
+
+### Response Example
+
+```js
+{
+  page: 1,
+  length: 9,
+  total: 9,
+  data: [
+    {
+      status: "open",
+      _id: "abcdefghijkl",
+      fixture: "abcdefghijkl",
+      orders: [
+        {
+          section: "A",
+          seatNumber: "001-0007"
+        }
+      ],
+      stripeSessionId: "cs_test_a1jzmIIXJtQ6SAfu0C5P5WYyDKajQxuyxtTljcxayCzqAt4tQjjRhHfHoK",
+      user: "abcdefghijkl",
+      created: "2021-12-11T09:22:24.561Z",
+    },
+    // other transactions data ...
+  ]
+}
+```
+
+### **Cancel Transaction**
+
+Manually cancel an open checkout session.
+
+### Endpoint
+
+```
+POST /api/transaction/:id/cancel
+```
+
+### Parameters
+
+No paramaters.
+
+### Body Data
+
+No body data.
+
+### Returns
+
+None.
+
+### Response Example
 
 ```js
 {
   success: true,
-  user: {
-    username: 'bigjoe'
-  }
-},
+}
 ```
 
 ---
@@ -345,6 +400,8 @@ Type: JSON
 
 User's username.
 
+### Response Example
+
 ```js
 {
   success: true,
@@ -385,6 +442,8 @@ Type: JSON
 
 User's username.
 
+### Response Example
+
 ```js
 {
   success: true,
@@ -416,6 +475,10 @@ No body data.
 
 None.
 
+### Response Example
+
 ```js
-{ success: true },
+{
+  success: true,
+}
 ```

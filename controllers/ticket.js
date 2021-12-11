@@ -1,6 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 
-const checkout = require('./helpers/checkoutFunctions.js');
+const checkout = require('./helpers/checkout-functions.js');
 
 const { STRIPE_WEBHOOK_SECRET } = process.env;
 
