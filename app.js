@@ -9,6 +9,7 @@ const mongoConnect = require('./database/mongo-connect.js');
 const passport = require('./passport/index.js');
 const fixtureRouter = require('./routes/fixture.js');
 const ticketRouter = require('./routes/ticket.js');
+const transactionRouter = require('./routes/transaction.js');
 const userRouter = require('./routes/user.js');
 
 const app = express();
@@ -54,6 +55,7 @@ app.use(passport.session());
 
 app.use('/api/fixture', fixtureRouter);
 app.use('/api/ticket', ticketRouter);
+app.use('/api/transaction', transactionRouter);
 app.use('/api/user', userRouter);
 
 // Demo routes. Delete later.

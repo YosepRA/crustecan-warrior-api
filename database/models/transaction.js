@@ -12,6 +12,8 @@ const transactionSchema = new Schema({
   ],
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   stripeSessionId: String,
+  status: { type: String, default: 'open' },
+  created: { type: Date, default: Date.now },
 });
 
 const Transaction = model('Transaction', transactionSchema);

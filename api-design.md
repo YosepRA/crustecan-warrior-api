@@ -88,7 +88,8 @@ It will use a "Load More" function rather than the usual pagination. Therefore, 
 {
   increment: 1,
   length: 3,
-  fixtures: [
+  total: 23,
+  data: [
     {
       _id: 'abcdefghjijkl',
       homeTeam: 'Crustecan Warrior',
@@ -194,7 +195,7 @@ POST /api/ticket/create-checkout-session
 
 ### Parameters
 
-_No parameters._
+No parameters.
 
 ### Body Data
 
@@ -263,6 +264,40 @@ Transaction data to monitor all initiated checkouts, its status, and act as a ge
     'Payment has completed.',
   ],
 }
+```
+
+### **Get Transactions List**
+
+Gets user's transactions list.
+
+### Endpoint
+
+```
+GET /api/transaction
+```
+
+### Parameters
+
+- `page` **Required**  
+  Type: `Number`  
+  Default: 1  
+  Currentp age iteration.
+
+### Body Data
+
+No body data.
+
+### Returns
+
+User's username.
+
+```js
+{
+  success: true,
+  user: {
+    username: 'bigjoe'
+  }
+},
 ```
 
 ---

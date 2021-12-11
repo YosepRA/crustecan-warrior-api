@@ -18,7 +18,14 @@ module.exports = {
       .skip(skip)
       .limit(limit);
 
-    res.json({ increment, length: fixtures.length, fixtures });
+    const fixtureTotal = await Fixture.estimatedDocumentCount();
+
+    res.json({
+      increment,
+      length: fixtures.length,
+      total: fixtureTotal,
+      data: fixtures,
+    });
   },
   async show(req, res) {
     const {
