@@ -78,9 +78,7 @@ GET /api/fixture
 
 ### Returns
 
-An array of fixtures starting from the next unplayed fixture until the next three matches.
-
-It will use a "Load More" function rather than the usual pagination. Therefore, it will result in a continuous and chunked response data instead of a full fixture list on each request.
+An array of fixtures starting from the next unplayed fixture until `n` amount based on "load more" button incrementation. Each increment will add three more data from the previous one.
 
 ### Response Example
 

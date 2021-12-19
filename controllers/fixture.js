@@ -3,19 +3,16 @@ const Fixture = require('../database/models/fixture.js');
 module.exports = {
   async index(req, res) {
     const {
-      query: { increment, includeSeat },
+      query: { increment = 1, includeSeat },
     } = req;
 
     const query = {};
-    const projection = {
-      seats: includeSeat === 'true' ? 1 : 0,
-    };
-    const limit = 3;
-    const skip = (increment - 1) * limit;
+    const projection = includeSeat === 'false' ? { seats: 0 } : {};
+    const limitPerRequest = 3;
+    const limit = increment * limitPerRequest;
 
     const fixtures = await Fixture.find(query, projection)
       .sort({ date: 1 })
-      .skip(skip)
       .limit(limit);
 
     const fixtureTotal = await Fixture.estimatedDocumentCount();

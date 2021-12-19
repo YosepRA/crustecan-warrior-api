@@ -11,3 +11,4 @@ Random thoughts and concerns while on development. Finished items will have ✅ 
 - Checkout data prefill. Use customer ID to tell Stripe to prefill checkout inputs.
 - Checkout manual cancel button. Change transaction status to "cancel", expire checkout session, and re-enable seats. ✅
 - General error handling. Consider using [Express](https://expressjs.com/en/guide/error-handling.html)-way of using global catcher. Or you can use a `promiseResolver` helper.
+- Route-based error handling. Simple ones such as Fixture details not found.

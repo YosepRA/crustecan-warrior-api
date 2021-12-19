@@ -14,7 +14,7 @@ module.exports = {
     } = req;
 
     /*
-      1. Disable ordered seat(s) for the chosen fisture.
+      1. Disable ordered seat(s) for the chosen fixture.
       2. Create a Stripe session.
       3. Create a transaction log.
       4. Return session URL.

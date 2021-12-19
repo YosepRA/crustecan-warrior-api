@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const session = require('express-session');
+const cors = require('cors');
 const logger = require('morgan');
 const MongoStore = require('connect-mongo');
 
@@ -14,7 +15,7 @@ const userRouter = require('./routes/user.js');
 
 const app = express();
 
-const { PORT, SESSION_SECRET, MONGO_URL } = process.env;
+const { PORT, SESSION_SECRET, MONGO_URL, UI_ENDPOINT } = process.env;
 
 const port = PORT || 3000;
 
@@ -26,6 +27,10 @@ if (!sessionSecret) {
   sessionSecret = 'unsafe_secret';
 }
 
+const corsConfig = {
+  origin: UI_ENDPOINT,
+};
+
 /* ========== Database ========== */
 
 const mongoUrl = MONGO_URL || 'mongodb://localhost:27017/crustecan-warrior';
@@ -33,6 +38,7 @@ mongoConnect(mongoUrl);
 
 /* ========== Middlewares ========== */
 
+app.use(cors(corsConfig));
 app.use(
   session({
     secret: sessionSecret,
@@ -46,7 +52,7 @@ app.use(
 );
 app.use(logger('dev'));
 
-/* ========== Passport Session Conifg ========== */
+/* ========== Passport Session Config ========== */
 
 app.use(passport.initialize());
 app.use(passport.session());
