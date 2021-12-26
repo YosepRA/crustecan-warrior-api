@@ -15,6 +15,8 @@ router.post('/register', controller.register);
 
 router.post('/login', authenticateLogin, controller.login);
 
+router.get('/login-session', isLoggedIn, controller.getLoginSession);
+
 router.get('/logout', controller.logout);
 
 router.get('/protected', isLoggedIn, (req, res) => {

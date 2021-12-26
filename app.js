@@ -29,6 +29,7 @@ if (!sessionSecret) {
 
 const corsConfig = {
   origin: UI_ENDPOINT,
+  credentials: true,
 };
 
 /* ========== Database ========== */

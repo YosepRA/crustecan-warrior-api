@@ -3,9 +3,7 @@ const { promiseResolver } = require('../scripts/helpers.js');
 
 module.exports = {
   async register(req, res) {
-    const {
-      user: { password, ...userRest },
-    } = req.body;
+    const { password, ...userRest } = req.body;
     const newUser = new User(userRest);
 
     const [registeredUser, registerError] = await promiseResolver(
@@ -13,9 +11,9 @@ module.exports = {
     );
 
     if (registerError) {
-      console.error(registerError);
       return res.json({
         success: false,
+        message: registerError.message,
       });
     }
 
@@ -46,6 +44,19 @@ module.exports = {
       success: true,
       user: userData,
     });
+  },
+  getLoginSession(req, res) {
+    const { username } = req.user;
+    const userData = {
+      username,
+    };
+
+    res.json({
+      success: true,
+      user: userData,
+    });
+
+    return undefined;
   },
   logout(req, res) {
     req.logout();
