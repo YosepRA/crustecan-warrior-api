@@ -24,6 +24,30 @@ async function toggleSeats(fixtureId, orders, status) {
   await fixture.save();
 }
 
+/* Routine fixture's ticket availability cehck. Given fixture's ID and desired
+status, it will toggle fixture's ticket availability to either true or false
+when necessary. */
+async function checkTicketAvailability(fixtureId, toggleTo) {
+  const fixture = await Fixture.findById(fixtureId);
+  const { seats } = fixture;
+
+  /* If we're disabling seats (therefore making an order), check if there is still
+  any seat available for the chosen fixture. If there isn't, then toggle fixture's
+  ticket availability to false. */
+  if (!toggleTo && !seats.some((seat) => seat.isAvailable)) {
+    fixture.isTicketAvailable = false;
+
+    await fixture.save();
+  } else if (toggleTo) {
+    /* Else if the order expires, whether through Stripe timer or explicit cancel
+    button, re-enable ticket's availablity anyway since at this point, the seats
+    have been toggled back on by "toggleSeats" function. */
+    fixture.isTicketAvailable = true;
+
+    await fixture.save();
+  }
+}
+
 async function createStripeSession(orders) {
   /* Created and managed through Stripe dashboard. We won't be creating new items
   on the fly. */
@@ -122,7 +146,7 @@ async function cancelOrder(sessionId) {
 
   /* Straight up update its status. But we still need the orders array to
   re-enable seats. */
-  const transaction = await Transaction.findOneAndUpdate(
+  const { fixture: fixtureId, orders } = await Transaction.findOneAndUpdate(
     {
       stripeSessionId: sessionId,
     },
@@ -131,11 +155,14 @@ async function cancelOrder(sessionId) {
     },
   );
 
-  await toggleSeats(transaction.fixture, transaction.orders, true);
+  await toggleSeats(fixtureId, orders, true);
+
+  await checkTicketAvailability(fixtureId, true);
 }
 
 module.exports = {
   toggleSeats,
+  checkTicketAvailability,
   createStripeSession,
   createTransaction,
   fulfillOrder,

@@ -3,11 +3,24 @@ const Fixture = require('../database/models/fixture.js');
 module.exports = {
   async index(req, res) {
     const {
-      query: { increment = 1, includeSeat },
+      query: { increment = 1, homeOnly, includeSeat },
     } = req;
 
+    /* ========== Building queries. ========== */
+
     const query = {};
-    const projection = includeSeat === 'false' ? { seats: 0 } : {};
+
+    if (homeOnly === 'true') query.isHome = true;
+
+    /* ========== Building projections ========== */
+
+    // Default projection by excluding seats.
+    const projection = { seats: 0 };
+
+    if (includeSeat === 'true') projection.seats = 1;
+
+    /* ========== Pagination ========== */
+
     const limitPerRequest = 3;
     const limit = increment * limitPerRequest;
 
@@ -15,7 +28,7 @@ module.exports = {
       .sort({ date: 1 })
       .limit(limit);
 
-    const fixtureTotal = await Fixture.estimatedDocumentCount();
+    const fixtureTotal = await Fixture.countDocuments(query);
 
     res.json({
       increment,

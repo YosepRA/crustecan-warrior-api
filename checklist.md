@@ -7,7 +7,10 @@ Random thoughts and concerns while on development. Finished items will have ✅ 
 - Checkout seat existence check. Imagine seat A-001-1000 when there is only 200 seat columns across.
 - Checkout cancellation event to re-enable ordered seats and expire the sesssion. ✅
 - Checkout expiration set to 1 hour and then manually expire the sesison. ✅
-- Fixture's tickets availability check on each successful orders.
+- Fixture's tickets availability check on:
+  - Session creation.
+  - Session cancellation.
+  - Ticket fulfillment.
 - Checkout data prefill. Use customer ID to tell Stripe to prefill checkout inputs.
 - Checkout manual cancel button. Change transaction status to "cancel", expire checkout session, and re-enable seats. ✅
 - General error handling. Consider using [Express](https://expressjs.com/en/guide/error-handling.html)-way of using global catcher. Or you can use a `promiseResolver` helper.

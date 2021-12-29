@@ -75,6 +75,10 @@ GET /api/fixture
   Type: `Boolean`  
   Default: false  
   By default, fixture list calls will not include seating information to reduce request load. A call with `includeSeat` set to `true` will occur on ticket fixtures instead.
+- `homeOnly` _Optional_  
+  Type: `Boolean`  
+  Default: false  
+  Whether to only list out home fixtures only.
 
 ### Returns
 

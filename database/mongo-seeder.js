@@ -1,8 +1,8 @@
 const faker = require('faker');
 
-const Fixture = require('../database/models/fixture.js');
-const mongoConnect = require('../database/mongo-connect.js');
-const { generateSeats } = require('./helpers.js');
+const Fixture = require('./models/fixture.js');
+const mongoConnect = require('./mongo-connect.js');
+const { generateSeats } = require('../scripts/helpers.js');
 
 const mongoUrl =
   process.argv[2] || 'mongodb://localhost:27017/crustecan-warrior';

@@ -15,12 +15,15 @@ module.exports = {
 
     /*
       1. Disable ordered seat(s) for the chosen fixture.
-      2. Create a Stripe session.
-      3. Create a transaction log.
-      4. Return session URL.
+      2. Ticket availablity routine check.
+      3. Create a Stripe session.
+      4. Create a transaction log.
+      5. Return session URL.
     */
 
     await checkout.toggleSeats(fixtureId, orders, false);
+
+    await checkout.checkTicketAvailability(fixtureId, false);
 
     const session = await checkout.createStripeSession(orders);
 
@@ -45,6 +48,7 @@ module.exports = {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
+
         await checkout.fulfillOrder(session.id);
         break;
       }
@@ -52,7 +56,7 @@ module.exports = {
       case 'checkout.session.expired': {
         const session = event.data.object;
 
-        checkout.cancelOrder(session.id);
+        await checkout.cancelOrder(session.id);
         break;
       }
 

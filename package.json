@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon -w . -w .env app.js",
+    "start:stripe": "stripe listen --forward-to http://localhost:3000/api/ticket/webhook",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
