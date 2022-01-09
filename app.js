@@ -15,7 +15,7 @@ const userRouter = require('./routes/user.js');
 
 const app = express();
 
-const { PORT, SESSION_SECRET, MONGO_URL, UI_ENDPOINT } = process.env;
+const { PORT, SESSION_SECRET, MONGO_URL, UI_ORIGIN } = process.env;
 
 const port = PORT || 3000;
 
@@ -28,7 +28,7 @@ if (!sessionSecret) {
 }
 
 const corsConfig = {
-  origin: UI_ENDPOINT,
+  origin: UI_ORIGIN,
   credentials: true,
 };
 

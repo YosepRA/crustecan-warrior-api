@@ -4,7 +4,7 @@ const Fixture = require('../../database/models/fixture.js');
 const Transaction = require('../../database/models/transaction.js');
 const Ticket = require('../../database/models/ticket.js');
 
-const { ORIGIN } = process.env;
+const { UI_ORIGIN } = process.env;
 
 async function toggleSeats(fixtureId, orders, status) {
   const fixture = await Fixture.findById(fixtureId);
@@ -86,8 +86,8 @@ async function createStripeSession(orders) {
     line_items: lineItems,
     expires_at: expiresAt,
     mode: 'payment',
-    success_url: `${ORIGIN}/success`,
-    cancel_url: `${ORIGIN}/cancel`,
+    success_url: `${UI_ORIGIN}/ticket/checkout/result?success=true`,
+    cancel_url: `${UI_ORIGIN}/ticket/checkout/result?success=false`,
   });
 
   return session;

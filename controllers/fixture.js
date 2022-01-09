@@ -17,7 +17,7 @@ module.exports = {
     // Default projection by excluding seats.
     const projection = { seats: 0 };
 
-    if (includeSeat === 'true') projection.seats = 1;
+    if (includeSeat === 'true') delete projection.seats;
 
     /* ========== Pagination ========== */
 
@@ -43,12 +43,12 @@ module.exports = {
       query: { includeSeat },
     } = req;
 
-    const projection = {
-      seats: includeSeat === 'true' ? 1 : 0,
-    };
+    const projection = { seats: 0 };
+
+    if (includeSeat === 'true') delete projection.seats;
 
     const fixture = await Fixture.findById(id, projection);
 
-    res.json({ fixture });
+    res.json({ data: fixture });
   },
 };

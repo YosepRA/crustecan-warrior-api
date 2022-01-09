@@ -15,3 +15,6 @@ Random thoughts and concerns while on development. Finished items will have ✅ 
 - Checkout manual cancel button. Change transaction status to "cancel", expire checkout session, and re-enable seats. ✅
 - General error handling. Consider using [Express](https://expressjs.com/en/guide/error-handling.html)-way of using global catcher. Or you can use a `promiseResolver` helper.
 - Route-based error handling. Simple ones such as Fixture details not found.
+- User get login session to handle unauthenticated session using other method than code 401.
+- Add basic caching for fixture and ticket's price.
+- Add a "created" property to ticket for sorting.

@@ -2,9 +2,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET);
 
 const checkout = require('./helpers/checkout-functions.js');
 
-const { STRIPE_WEBHOOK_SECRET } = process.env;
-
-const endpointSecret = STRIPE_WEBHOOK_SECRET;
+const { STRIPE_WEBHOOK_SECRET: endpointSecret } = process.env;
 
 module.exports = {
   async createCheckoutSession(req, res) {
