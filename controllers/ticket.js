@@ -1,10 +1,33 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 
+const Ticket = require('../database/models/ticket.js');
 const checkout = require('./helpers/checkout-functions.js');
+const { promiseResolver } = require('../scripts/helpers.js');
 
 const { STRIPE_WEBHOOK_SECRET: endpointSecret } = process.env;
 
 module.exports = {
+  async show(req, res) {
+    const {
+      params: { ticketId },
+    } = req;
+
+    const [data, error] = await promiseResolver(
+      Ticket.findById(ticketId).populate('fixture'),
+    );
+
+    if (error) {
+      return res.json({
+        success: false,
+        message: error.message,
+      });
+    }
+
+    return res.json({
+      success: true,
+      data,
+    });
+  },
   async createCheckoutSession(req, res) {
     const {
       body: { fixtureId, orders },

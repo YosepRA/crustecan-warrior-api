@@ -18,3 +18,4 @@ Random thoughts and concerns while on development. Finished items will have ✅ 
 - User get login session to handle unauthenticated session using other method than code 401.
 - Add basic caching for fixture and ticket's price.
 - Add a "created" property to ticket for sorting.
+- Consider splitting ticket and checkout routes since the front-end is using that schema.

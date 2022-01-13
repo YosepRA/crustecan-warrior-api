@@ -185,6 +185,53 @@ A fixture's detailed information.
 }
 ```
 
+### **Get Ticket Details**
+
+Get ticket detailed information.
+
+### Endpoint
+
+```
+GET /api/ticket/:id
+```
+
+### Parameters
+
+No parameters.
+
+### Body Data
+
+No body data.
+
+### Returns
+
+Ticket's detailed information.
+
+### Response Example
+
+```js
+{
+  success: true,
+  data: {
+    seat: {
+      section: 'A',
+      seatNumber: '001-0001'
+    },
+    _id: '61b33ffdaf18fa1a58d147f1',
+    fixture: {
+      _id: '61a349fca56d68263cd101c9',
+      homeTeam: 'Crustecan Warrior FC',
+      awayTeam: 'Gatekeepers',
+      event: 'Premier League',
+      date: '2022-04-27T18:52:34.760Z',
+      isHome: true,
+      seats: [Seat],
+      isTicketAvailable: true,
+    },
+  }
+},
+```
+
 ### **Create Checkout Session**
 
 Create checkout session powered by Stripe to get URL to payment page. While the payment session is still active (it's neither succeed or failed), the ordered seat status will not be available for other session. User will be given 15 minutes to complete the order, else it will be canceled automatically.

@@ -7,6 +7,8 @@ const router = express.Router();
 
 /* ========== Routes ========== */
 
+router.get('/:ticketId', controller.show);
+
 router.post(
   '/create-checkout-session',
   isLoggedIn,
