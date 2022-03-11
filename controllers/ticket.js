@@ -1,6 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 
 const Ticket = require('../database/models/ticket.js');
+const Transaction = require('../database/models/transaction.js');
 const checkout = require('./helpers/checkout-functions.js');
 const { promiseResolver } = require('../scripts/helpers.js');
 
@@ -76,8 +77,13 @@ module.exports = {
 
       case 'checkout.session.expired': {
         const session = event.data.object;
+        const transaction = await Transaction.findOne({
+          stripeSessionId: session.id,
+        });
 
-        await checkout.cancelOrder(session.id);
+        if (transaction.status === 'open') {
+          await checkout.cancelOrder(session.id);
+        }
         break;
       }
 

@@ -8,6 +8,7 @@ const ticketSchema = new Schema({
     section: String,
     seatNumber: String,
   },
+  created: { type: Date, default: Date.now },
 });
 
 const Ticket = model('Ticket', ticketSchema);

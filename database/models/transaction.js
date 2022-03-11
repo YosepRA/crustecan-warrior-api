@@ -12,6 +12,7 @@ const transactionSchema = new Schema({
   ],
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   stripeSessionId: String,
+  stripeSessionUrl: String,
   status: { type: String, default: 'open' },
   created: { type: Date, default: Date.now },
 });

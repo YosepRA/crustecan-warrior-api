@@ -10,7 +10,6 @@ const mongoConnect = require('./database/mongo-connect.js');
 const passport = require('./passport/index.js');
 const fixtureRouter = require('./routes/fixture.js');
 const ticketRouter = require('./routes/ticket.js');
-const transactionRouter = require('./routes/transaction.js');
 const userRouter = require('./routes/user.js');
 
 const app = express();
@@ -18,6 +17,7 @@ const app = express();
 const { PORT, SESSION_SECRET, MONGO_URL, UI_ORIGIN } = process.env;
 
 const port = PORT || 3000;
+const mongoUrl = MONGO_URL || 'mongodb://localhost:27017/crustecan-warrior';
 
 let sessionSecret = SESSION_SECRET;
 if (!sessionSecret) {
@@ -31,26 +31,24 @@ const corsConfig = {
   origin: UI_ORIGIN,
   credentials: true,
 };
+const sessionConfig = {
+  secret: sessionSecret,
+  saveUninitialized: false,
+  resave: false,
+  store: MongoStore.create({
+    mongoUrl,
+    ttl: 7 * 24 * 60 * 60,
+  }),
+};
 
-/* ========== Database ========== */
+/* ========== Database Connection ========== */
 
-const mongoUrl = MONGO_URL || 'mongodb://localhost:27017/crustecan-warrior';
 mongoConnect(mongoUrl);
 
 /* ========== Middlewares ========== */
 
 app.use(cors(corsConfig));
-app.use(
-  session({
-    secret: sessionSecret,
-    saveUninitialized: false,
-    resave: false,
-    store: MongoStore.create({
-      mongoUrl,
-      ttl: 7 * 24 * 60 * 60,
-    }),
-  }),
-);
+app.use(session(sessionConfig));
 app.use(logger('dev'));
 
 /* ========== Passport Session Config ========== */
@@ -62,16 +60,7 @@ app.use(passport.session());
 
 app.use('/api/fixture', fixtureRouter);
 app.use('/api/ticket', ticketRouter);
-app.use('/api/transaction', transactionRouter);
 app.use('/api/user', userRouter);
-
-// Demo routes. Delete later.
-app.get('/success', (req, res) => {
-  res.send('Succeeded.');
-});
-app.get('/cancel', (req, res) => {
-  res.send('Cancelled.');
-});
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}...`);

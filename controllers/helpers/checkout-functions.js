@@ -24,7 +24,7 @@ async function toggleSeats(fixtureId, orders, status) {
   await fixture.save();
 }
 
-/* Routine fixture's ticket availability cehck. Given fixture's ID and desired
+/* Routine fixture's ticket availability check. Given fixture's ID and desired
 status, it will toggle fixture's ticket availability to either true or false
 when necessary. */
 async function checkTicketAvailability(fixtureId, toggleTo) {
@@ -98,6 +98,7 @@ async function createTransaction(fixtureId, orders, stripeSession, user) {
     fixture: fixtureId,
     orders,
     stripeSessionId: stripeSession.id,
+    stripeSessionUrl: stripeSession.url,
     user,
     status: 'open',
   };
@@ -140,8 +141,8 @@ async function fulfillOrder(sessionId) {
 
 async function cancelOrder(sessionId) {
   /*
-    1. Re-enable seats.
-    2. Change transaction status to "expired".
+    1. Change transaction status to "cancelled".
+    2. Re-enable ordered seats and ticket's availability.
   */
 
   /* Straight up update its status. But we still need the orders array to
@@ -155,9 +156,14 @@ async function cancelOrder(sessionId) {
     },
   );
 
-  await toggleSeats(fixtureId, orders, true);
+  const toggleSeatsPromise = toggleSeats(fixtureId, orders, true);
 
-  await checkTicketAvailability(fixtureId, true);
+  const checkTicketAvailabilityPromise = checkTicketAvailability(
+    fixtureId,
+    true,
+  );
+
+  await Promise.all([toggleSeatsPromise, checkTicketAvailabilityPromise]);
 }
 
 module.exports = {

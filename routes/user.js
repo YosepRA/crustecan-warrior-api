@@ -19,8 +19,10 @@ router.get('/login-session', isLoggedIn, controller.getLoginSession);
 
 router.get('/logout', controller.logout);
 
-router.get('/protected', isLoggedIn, (req, res) => {
-  res.send('You have entered the protected route.');
-});
+router.get('/ticket', isLoggedIn, controller.ticketList);
+
+router.get('/transaction', isLoggedIn, controller.transactionList);
+
+router.put('/transaction/:id/cancel', isLoggedIn, controller.transactionCancel);
 
 module.exports = router;
