@@ -14,7 +14,7 @@ const userRouter = require('./routes/user.js');
 
 const app = express();
 
-const { PORT, SESSION_SECRET, MONGO_URL, UI_ORIGIN } = process.env;
+const { NODE_ENV, PORT, SESSION_SECRET, MONGO_URL, UI_ORIGIN } = process.env;
 
 const port = PORT || 3000;
 const mongoUrl = MONGO_URL || 'mongodb://localhost:27017/crustecan-warrior';
@@ -35,11 +35,22 @@ const sessionConfig = {
   secret: sessionSecret,
   saveUninitialized: false,
   resave: false,
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  },
   store: MongoStore.create({
     mongoUrl,
     ttl: 7 * 24 * 60 * 60,
   }),
 };
+
+if (NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+  sessionConfig.cookie.sameSite = 'none';
+  sessionConfig.cookie.secure = true;
+}
 
 /* ========== Database Connection ========== */
 

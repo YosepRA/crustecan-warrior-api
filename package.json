@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Crustecan Warrior API for fixtures list and ticketing system.",
   "main": "app.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon -w . -w .env app.js",
