@@ -42,7 +42,6 @@ async function createTestData(fixtureId, amount) {
     }
   });
 
-  // seats[0].isAvailable = true;
   fixture.isTicketAvailable = true;
 
   await fixture.save();

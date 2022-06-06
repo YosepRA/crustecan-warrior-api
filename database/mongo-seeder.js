@@ -7,10 +7,9 @@ const User = require('./models/user.js');
 const mongoConnect = require('./mongo-connect.js');
 const { generateSeats } = require('../scripts/helpers.js');
 
-const amountArg = parseInt(process.argv[2], 10) || 10;
-const userIdArg = process.argv[3] || '61b33ea9af18fa1a58d147e6';
 const mongoUrl =
-  process.argv[4] || 'mongodb://localhost:27017/crustecan-warrior';
+  process.argv[2] || 'mongodb://localhost:27017/crustecan-warrior';
+const amountArg = parseInt(process.argv[3], 10) || 10;
 
 const dbConnection = mongoConnect(mongoUrl);
 
@@ -57,13 +56,17 @@ async function resetAndGenerateFixtures(amount) {
   await generateFixtures(amount);
 }
 
-async function resetUser(userId) {
-  const user = await User.findById(userId);
+async function resetUser() {
+  const users = await User.find({});
 
-  user.transactions = [];
-  user.tickets = [];
+  const resetPromises = users.map((user) => {
+    user.transactions = [];
+    user.tickets = [];
 
-  await user.save();
+    return user.save();
+  });
+
+  await Promise.all(resetPromises);
 }
 
 function resetTransaction(query = {}) {
@@ -82,7 +85,7 @@ const fixturePromise = resetAndGenerateFixtures(amountArg);
 
 // And reset everything else.
 
-const userPromise = resetUser(userIdArg).then(() =>
+const userPromise = resetUser().then(() =>
   console.log('Reset user is successful.'),
 );
 
