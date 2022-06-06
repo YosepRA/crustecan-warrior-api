@@ -1,5 +1,7 @@
 const passport = require('passport');
 
+const { DEMO } = process.env;
+
 module.exports = {
   isLoggedIn(req, res, next) {
     if (!req.isAuthenticated()) {
@@ -29,5 +31,12 @@ module.exports = {
 
       return undefined;
     })(req, res, next);
+  },
+  demo(req, res, next) {
+    if (DEMO === 'true') {
+      return res.send('Feature is disabled on demo build.');
+    }
+
+    return next();
   },
 };

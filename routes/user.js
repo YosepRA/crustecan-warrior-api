@@ -1,7 +1,11 @@
 const express = require('express');
 
 const controller = require('../controllers/user.js');
-const { authenticateLogin, isLoggedIn } = require('../middlewares/index.js');
+const {
+  authenticateLogin,
+  isLoggedIn,
+  demo,
+} = require('../middlewares/index.js');
 
 const router = express.Router();
 
@@ -11,7 +15,7 @@ router.use(express.json());
 
 /* ========== Routes ========== */
 
-router.post('/register', controller.register);
+router.post('/register', demo, controller.register);
 
 router.post('/login', authenticateLogin, controller.login);
 

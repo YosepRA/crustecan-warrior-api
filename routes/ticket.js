@@ -1,7 +1,7 @@
 const express = require('express');
 
 const controller = require('../controllers/ticket.js');
-const { isLoggedIn } = require('../middlewares/index.js');
+const { isLoggedIn, demo } = require('../middlewares/index.js');
 
 const router = express.Router();
 
@@ -11,6 +11,7 @@ router.get('/:ticketId', controller.show);
 
 router.post(
   '/create-checkout-session',
+  demo,
   isLoggedIn,
   express.json(),
   controller.createCheckoutSession,

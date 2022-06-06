@@ -36,3 +36,8 @@ Random thoughts and concerns while on development. Finished items will have ✅ 
 - Consider changing the place of Stripe webhook away from ticket router to make it more specific since it's not solely intended for to tickets, but spreads to transaction as well.
 - Asynchronous programming concurrency. Don't _await_ non-dependent promises consecutively. Read [this article](https://dev.to/imichaelowolabi/this-is-why-your-nodejs-application-is-slow-206j) on asynchronous performance.
 - Utilize `promiseResolver` wherever you can to make it universal.
+- MongoDB/Mongoose related error handling.  
+  The server will crash if given an incorrect ID pattern such as those of different length.
+- Change error-success response schema to be more consistent with its `success` property. For example, user ticket list.
+  - **Answer:** Express will crash on unhandled errors. Implement the global error handler.
+- Prod: Checkout result page is not working.

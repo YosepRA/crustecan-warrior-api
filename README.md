@@ -28,3 +28,5 @@ Web UI repository: https://github.com/YosepRA/crustecan-warrior-ui
   Front-end origin for CORS and cookies.
 - `SESSION_SECRET`  
   Session secret key.
+- `DEMO`  
+  Decide whether to use Demo build or not. It will disable most mutation operations.

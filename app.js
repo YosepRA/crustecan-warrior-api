@@ -14,7 +14,8 @@ const userRouter = require('./routes/user.js');
 
 const app = express();
 
-const { NODE_ENV, PORT, SESSION_SECRET, MONGO_URL, UI_ORIGIN } = process.env;
+const { NODE_ENV, PORT, SESSION_SECRET, MONGO_URL, UI_ORIGIN, DEMO } =
+  process.env;
 
 const port = PORT || 3000;
 const mongoUrl = MONGO_URL || 'mongodb://localhost:27017/crustecan-warrior';
@@ -74,5 +75,11 @@ app.use('/api/ticket', ticketRouter);
 app.use('/api/user', userRouter);
 
 app.listen(port, () => {
+  if (DEMO === 'true') {
+    console.log(
+      '\x1b[1mNOTICE: You are currently running the demo build. Most mutation operations will be disabled.\x1b[0m',
+    );
+  }
+
   console.log(`Server is listening on port ${port}...`);
 });
